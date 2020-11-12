@@ -20,6 +20,12 @@ app.post('/', async (req, res) => {
 	res.redirect('/');
 });
 
+app.get('/delete/:id', async (req, res) => {
+	console.log(req.params);
+	await expenseRepo.delete(req.params.id);
+	res.redirect('/');
+});
+
 app.listen(3000, () => {
 	console.log('Expense Tracker is Running');
 });

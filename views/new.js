@@ -8,7 +8,11 @@ module.exports = ({ expenses }) => {
           <td data-label="Name">${e.name}</td>
           <td data-label="Amount">${e.amount}</td>
           <td data-label="Date">${e.date}</td>
-          <td data-label="Action"><button class="ui inverted red button">Delete</button></td>
+          <td data-label="Action">
+            <form action="/delete/${e.id}" method="GET">
+              <button class="ui inverted red button">Delete</button>
+            </form>
+          </td>
         </tr>`;
 		})
 		.join('\n');
