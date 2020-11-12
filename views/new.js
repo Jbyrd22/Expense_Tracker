@@ -1,36 +1,75 @@
 const layout = require('./layout');
 
-function createExpenseElements(listOfExpenses) {
-	if (!listOfExpenses) {
-		return `<p>Create an expense....</p>`;
-	}
-
-	let expenseList = [];
-	listOfExpenses.forEach((e) => {
-		expenseList.push(`
-    <li>${e.name}  <span>${e.amount}</span>  <span>${e.date}</span>  <button>Delete</button></li>
-    `);
-	});
-	return expenseList;
-}
-
 module.exports = ({ expenses }) => {
+	const expenseList = expenses
+		.map((e) => {
+			return `
+        <tr>
+          <td data-label="Name">${e.name}</td>
+          <td data-label="Amount">${e.amount}</td>
+          <td data-label="Date">${e.date}</td>
+          <td data-label="Action"><button class="ui inverted red button">Delete</button></td>
+        </tr>`;
+		})
+		.join('\n');
+
+	const getExpenseTotal = (expenseAmounts) => {
+		let expenseCounter = 0;
+		for (let i = 0; i < expenseAmounts.length; i++) {
+			expenseCounter = expenseCounter + parseFloat(expenseAmounts[i].amount);
+		}
+		return expenseCounter.toString();
+	};
+
 	return layout({
 		content : `
-      <div id="form-container">
-        <h3 class="form-heading">Add New Expense</h3>
-        <form action="" method="post">
-          <input type="text" class="expense-name" name="name">
-          <input type="text" class="expense-amount" name="amount">
-          <input type="text" class="expense-date" name="date">
-          <button type="submit">Add Expense</button>
-        </form>
-      </div>
-      <div class="expense-list-area">
-        <ul class="expense-list">
-          ${createExpenseElements(expenses)}
-        </ul>
-      </div>
+      <form action='/' method="POST">
+        <div class="ui form">
+          <div class="fields">
+            <div class="field">
+              <label>Expense Name</label>
+              <input name="name" type="text" placeholder="Expense">
+            </div>
+            <div class="field">
+              <label>Amount</label>
+              <input name="amount" type="text" placeholder="Amount">
+            </div>
+            <div class="field">
+              <label>Date</label>
+              <input name="date" type="text" placeholder="Date">
+            </div>
+            <div class="field">
+              <label>Submit Expense</label>
+              <button class="ui inverted green button">Submit</button>
+            </div>
+          </div>
+        </div>
+      </form>
+      <table class="ui celled table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Amount</th>
+            <th>Date</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${expenses.length <= 0 ? 'There are no Expenses to show' : expenseList}
+        </tbody>
+      </table>
+      <table class="ui celled table">
+        <thead>
+          <tr>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-label="Total">${expenses.length <= 0 ? '' : getExpenseTotal(expenses)}</td>            
+          </tr>
+        </tbody>
+      </table>
     `
 	});
 };

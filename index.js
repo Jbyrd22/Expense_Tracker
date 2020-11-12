@@ -14,6 +14,12 @@ app.get('/', async (req, res) => {
 	res.send(newExpenseTemplate({ expenses: data }));
 });
 
+app.post('/', async (req, res) => {
+	const attrs = req.body;
+	await expenseRepo.create(attrs);
+	res.redirect('/');
+});
+
 app.listen(3000, () => {
 	console.log('Expense Tracker is Running');
 });
